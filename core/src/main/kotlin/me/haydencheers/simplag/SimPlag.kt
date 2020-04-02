@@ -11,6 +11,7 @@ import me.haydencheers.simplag.transformationscope.TransformationScopeContext
 import me.haydencheers.simplag.util.FileUtils
 import me.haydencheers.simplag.util.JsonSerialiser
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.stream.IntStream
 import javax.inject.Inject
@@ -44,15 +45,20 @@ class SimPlag {
     fun run(args: Array<String>) {
         if (args.count() != 1) throw IllegalArgumentException("Usage: SimPlag <path to config file>")
 
-        val tmp = Files.createTempDirectory("simplag")
-
         val configPath = Paths.get(args[0])
-        this.config = JsonSerialiser.deserialise(configPath, SimPlagConfig::class)
+        val config = JsonSerialiser.deserialise(configPath, SimPlagConfig::class)
+        run(config, configPath.parent)
+    }
+
+    fun run(config: SimPlagConfig, root: Path) {
+
+        val tmp = Files.createTempDirectory("simplag")
+        this.config = config
         this.config.random = Random(config.randomSeed)
 
-        val src = configPath.parent.resolve(config.input)
-        val seed = configPath.parent.resolve(config.injectionSources)
-        val out = configPath.parent.resolve(config.output)
+        val src = root.resolve(config.input)
+        val seed = root.resolve(config.injectionSources)
+        val out = root.resolve(config.output)
 
         // Validate config parameters
         if (!Files.exists(src) || !Files.isDirectory(src)) throw IllegalArgumentException("Input source ${src} does not exist or is not a folder")
@@ -150,8 +156,7 @@ class SimPlag {
                     // Save
                     var savePath = out.resolve("${submission.name}-${submission.variantId}")
                     if (Files.exists(savePath)) {
-                        savePath =
-                                out.resolve("_dup-${fileNameCounter.getAndIncrement()}-${submission.name}-${submission.variantId}")
+                        savePath = out.resolve("_dup-${fileNameCounter.getAndIncrement()}-${submission.name}-${submission.variantId}")
                     }
 
                     Files.createDirectory(savePath)
@@ -162,7 +167,6 @@ class SimPlag {
         // Save analytics
         val analyticsFile = out.resolve("analytics.json.zip")
         JsonSerialiser.serialiseCompressed(analytics, analyticsFile)
-        val an = JsonSerialiser.deserialiseCompressed(analyticsFile, Analytics::class)
 
         // Cleanup
         Files.walk(tmp)
