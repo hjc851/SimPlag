@@ -1,0 +1,5 @@
+rootProject.name = 'SimPlag'
+include 'app'
+include 'core'
+include 'cdi-transformation-scope'
+
