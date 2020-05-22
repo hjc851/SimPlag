@@ -25,58 +25,58 @@ class InjectConfig {
     var injectAssignmentCount: Int = 5
 
     var injectFile: Boolean = true
-    var injectFileChance: Double = 0.1
+    var injectFileChance: Double = 1.0
 
     var injectClass: Boolean = true
-    var injectClassChance: Double = 0.1
+    var injectClassChance: Double = 1.0
 
     var injectMethod: Boolean = true
-    var injectMethodChance: Double = 0.1
+    var injectMethodChance: Double = 1.0
 
     var injectBlock: Boolean = true
-    var injectBlockChance: Double = 0.1
-    var injectBlockMaxStatements: Int = 5
+    var injectBlockChance: Double = 1.0
+    var injectBlockMaxStatements: Int = 10
 }
 
 class MutateConfig {
     var commenting = CommentingConfig()
 
 //    var changeWhitespace = true
-//    var changeWhitespaceChance = 0.1
+//    var changeWhitespaceChance = 1.0
 //    var changeFormatting = true
-//    var changeFormattingChance = 0.1
+//    var changeFormattingChance = 1.0
 
     var renameIdentifiers = true
-    var renameIdentifiersChance = 0.1
+    var renameIdentifiersChance = 1.0
 
     var reorderStatements = true
-    var reorderStatementsChance = 0.1
+    var reorderStatementsChance = 1.0
     var reorderMemberDeclarations = true
-    var reorderMemberDeclarationsChance = 0.1
+    var reorderMemberDeclarationsChance = 1.0
 
     var swapOperands = true
-    var swapOperandsChance = 0.1
+    var swapOperandsChance = 1.0
 
     var upcastDataTypes = true
-    var upcastDataTypesChance = 0.1
+    var upcastDataTypesChance = 1.0
 
     var switchToIf = true
-    var switchToIfChance = 0.1
+    var switchToIfChance = 1.0
     var forToWhile = true
-    var forToWhileChance = 0.1
+    var forToWhileChance = 1.0
     var expandCompoundAssignment = true
-    var expandCompoundAssignmentChance = 0.1
+    var expandCompoundAssignmentChance = 1.0
     var expandIncDec = true
-    var expandIncDecChance= 0.1
+    var expandIncDecChance= 1.0
 
     var splitVariableDeclarations = true
-    var splitVariableDeclarationsChance = 0.1
+    var splitVariableDeclarationsChance = 1.0
     var assignDefaultValue = true
-    var assignDefaultValueChance = 0.1
+    var assignDefaultValueChance = 1.0
     var splitDeclAndAssignment = true
-    var splitDeclAndAssignmentChance = 0.1
+    var splitDeclAndAssignmentChance = 1.0
     var groupVariableDeclarations = true
-    var groupVariableDeclarationsChance = 0.1
+    var groupVariableDeclarationsChance = 1.0
 }
 
 class CommentingConfig {

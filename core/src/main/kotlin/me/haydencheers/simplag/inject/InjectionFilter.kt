@@ -84,6 +84,8 @@ class ClassInjectionFilter : InjectionFilter() {
                 }
             }
         } catch (e: NoSuchElementException) {
+        } catch (e: StackOverflowError) {
+            System.err.println("Stack Overflow ....")
         }
     }
 }
@@ -124,6 +126,8 @@ class MethodInjectionFilter : InjectionFilter() {
                 }
             }
         } catch (e: NoSuchElementException) {
+        } catch (e: StackOverflowError) {
+            System.err.println("Stack Overflow ....")
         }
     }
 }
@@ -175,6 +179,8 @@ class BlockInjectionFilter : InjectionFilter() {
                 }
             }
         } catch (e: NoSuchElementException) {
+        } catch (e: StackOverflowError) {
+            System.err.println("Stack Overflow ....")
         }
     }
 }
