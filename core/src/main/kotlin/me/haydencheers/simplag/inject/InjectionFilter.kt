@@ -29,27 +29,29 @@ class FileInjectionFilter : InjectionFilter() {
     override fun process(config: SimPlagConfig, manifest: MutableAssignmentManifest) {
         try {
             if (config.random.nextDouble(0.0, 1.0) <= config.inject.injectFileChance) {
-                val assignment = seedLibrary.assignmentManifests.random(config.random)
-                val fileToInject = assignment.files.random(config.random)
+                for (i in 0 .. config.random.nextInt(1, config.inject.injectFileMaxCount+1)) {
+                    val assignment = seedLibrary.assignmentManifests.random(config.random)
+                    val fileToInject = assignment.files.random(config.random)
 
-                var relativeName = assignment.root.relativize(fileToInject.path).toString()
+                    var relativeName = assignment.root.relativize(fileToInject.path).toString()
 
-                if (Files.exists(manifest.root.resolve(relativeName))) {
-                    relativeName = "injected-${fileNameCounter.getAndIncrement()}.java"
-                }
+                    if (Files.exists(manifest.root.resolve(relativeName))) {
+                        relativeName = "injected-${fileNameCounter.getAndIncrement()}.java"
+                    }
 
-                val fileManifest = Manifests.buildForFile(fileToInject.path, assignment.root)
-                fileManifest.relativeName = relativeName
-                manifest.files.add(fileManifest)
+                    val fileManifest = Manifests.buildForFile(fileToInject.path, assignment.root)
+                    fileManifest.relativeName = relativeName
+                    manifest.files.add(fileManifest)
 
-                analytics.injectedFiles.add(
-                    InjectedFileRecord(
-                        fileToInject.path.toAbsolutePath().toString(),
-                        manifest.name,
-                        manifest.variantId,
-                        relativeName
+                    analytics.injectedFiles.add(
+                        InjectedFileRecord(
+                            fileToInject.path.toAbsolutePath().toString(),
+                            manifest.name,
+                            manifest.variantId,
+                            relativeName
+                        )
                     )
-                )
+                }
             }
         } catch (e: NoSuchElementException) {
         }
@@ -142,7 +144,7 @@ class BlockInjectionFilter : InjectionFilter() {
                 for (injectClass in injectFile.types) {
                     for (injectMethod in injectClass.methods) {
                         if (config.random.nextDouble(0.0, 1.0) <= config.inject.injectBlockChance) {
-                            for (i in 0 until config.random.nextInt(1, config.inject.injectBlockMaxStatements+1)) {
+                            for (i in 0 until config.random.nextInt((config.inject.injectBlockMaxStatements/2), config.inject.injectBlockMaxStatements+1)) {
                                 val seedAssignment = seedLibrary.assignmentManifests.random(config.random)
                                 val seedFile = seedAssignment.files.random(config.random)
                                 val seedClass = seedFile.types.random(config.random)
