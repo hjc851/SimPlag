@@ -29,9 +29,11 @@ class InjectConfig {
 
     var injectClass: Boolean = true
     var injectClassChance: Double = 1.0
+    var injectClassMaxCount: Int = 1
 
     var injectMethod: Boolean = true
     var injectMethodChance: Double = 1.0
+    var injectMethodMaxCount = 2
 
     var injectBlock: Boolean = true
     var injectBlockChance: Double = 1.0
@@ -40,11 +42,6 @@ class InjectConfig {
 
 class MutateConfig {
     var commenting = CommentingConfig()
-
-//    var changeWhitespace = true
-//    var changeWhitespaceChance = 1.0
-//    var changeFormatting = true
-//    var changeFormattingChance = 1.0
 
     var renameIdentifiers = true
     var renameIdentifiersChance = 1.0

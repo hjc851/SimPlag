@@ -63,29 +63,29 @@ class ClassInjectionFilter : InjectionFilter() {
         try {
             for (injectFile in manifest.files) {
                 if (config.random.nextDouble(0.0, 1.0) <= config.inject.injectClassChance) {
-                    val seedAssignment = seedLibrary.assignmentManifests.random(config.random)
-                    val seedFile = seedAssignment.files.random(config.random)
-                    val seedClass = seedFile.types.random(config.random)
+                    for (i in 0 .. config.random.nextInt(1, config.inject.injectClassMaxCount+1)) {
+                        val seedAssignment = seedLibrary.assignmentManifests.random(config.random)
+                        val seedFile = seedAssignment.files.random(config.random)
+                        val seedClass = seedFile.types.random(config.random)
 
-                    val injectCU = injectFile.ast as CompilationUnit
-                    val newClass = ASTCloner.clone(seedClass.node, injectCU.ast)
-                    injectCU.types().add(newClass)
+                        val injectCU = injectFile.ast as CompilationUnit
+                        val newClass = ASTCloner.clone(seedClass.node, injectCU.ast)
+                        injectCU.types().add(newClass)
 
-                    analytics.injectedClasses.add(
-                        InjectedClassRecord(
-                            manifest.name,
-                            manifest.variantId,
-                            seedAssignment.name,
-                            seedFile.path.toString(),
-                            seedClass.name,
-                            injectFile.relativeName
+                        analytics.injectedClasses.add(
+                            InjectedClassRecord(
+                                manifest.name,
+                                manifest.variantId,
+                                seedAssignment.name,
+                                seedFile.path.toString(),
+                                seedClass.name,
+                                injectFile.relativeName
+                            )
                         )
-                    )
+                    }
                 }
             }
         } catch (e: NoSuchElementException) {
-        } catch (e: StackOverflowError) {
-            System.err.println("Stack Overflow ....")
         }
     }
 }
@@ -98,36 +98,37 @@ class MethodInjectionFilter : InjectionFilter() {
             for (injectFile in manifest.files) {
                 for (injectClass in injectFile.types) {
                     if (config.random.nextDouble(0.0, 1.0) <= config.inject.injectMethodChance) {
-                        val seedAssignment = seedLibrary.assignmentManifests.random(config.random)
-                        val seedFile = seedAssignment.files.random(config.random)
-                        val seedClass = seedFile.types.random(config.random)
-                        val seedMethod = seedClass.methods.random(config.random)
+                        for (i in 0 .. config.random.nextInt(1, config.inject.injectMethodMaxCount+1)) {
+                            val seedAssignment = seedLibrary.assignmentManifests.random(config.random)
+                            val seedFile = seedAssignment.files.random(config.random)
+                            val seedClass = seedFile.types.random(config.random)
+                            val seedMethod = seedClass.methods.random(config.random)
 
-                        val injectNode = injectClass.node
+                            val injectNode = injectClass.node
 
-                        val clonedMethod = ASTCloner.clone(seedMethod.node, injectNode.ast)
-                        injectNode.bodyDeclarations().add(clonedMethod)
+                            val clonedMethod = ASTCloner.clone(seedMethod.node, injectNode.ast)
+                            injectNode.bodyDeclarations().add(clonedMethod)
 
-                        analytics.injectedMethods.add(
-                            InjectedMethodRecord(
-                                manifest.name,
-                                manifest.variantId,
+                            analytics.injectedMethods.add(
+                                InjectedMethodRecord(
+                                    manifest.name,
+                                    manifest.variantId,
 
-                                seedAssignment.name,
-                                seedFile.path.toString(),
-                                seedClass.name,
-                                seedMethod.name,
+                                    seedAssignment.name,
+                                    seedFile.path.toString(),
+                                    seedClass.name,
+                                    seedMethod.name,
 
-                                injectFile.relativeName,
-                                injectClass.name
+                                    injectFile.relativeName,
+                                    injectClass.name
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
-        } catch (e: NoSuchElementException) {
-        } catch (e: StackOverflowError) {
-            System.err.println("Stack Overflow ....")
+        }
+        catch (e: NoSuchElementException) {
         }
     }
 }
@@ -141,7 +142,7 @@ class BlockInjectionFilter : InjectionFilter() {
                 for (injectClass in injectFile.types) {
                     for (injectMethod in injectClass.methods) {
                         if (config.random.nextDouble(0.0, 1.0) <= config.inject.injectBlockChance) {
-                            for (i in 0 until config.random.nextInt(1, config.inject.injectBlockMaxStatements)) {
+                            for (i in 0 until config.random.nextInt(1, config.inject.injectBlockMaxStatements+1)) {
                                 val seedAssignment = seedLibrary.assignmentManifests.random(config.random)
                                 val seedFile = seedAssignment.files.random(config.random)
                                 val seedClass = seedFile.types.random(config.random)
@@ -179,8 +180,6 @@ class BlockInjectionFilter : InjectionFilter() {
                 }
             }
         } catch (e: NoSuchElementException) {
-        } catch (e: StackOverflowError) {
-            System.err.println("Stack Overflow ....")
         }
     }
 }

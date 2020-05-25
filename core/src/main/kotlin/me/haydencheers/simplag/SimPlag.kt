@@ -136,10 +136,14 @@ class SimPlag {
         // Do the transformations
         println("Transforming submissions (${config.copies} each)")
         for (submissionRoot in validSubmissions) {
+            println(submissionRoot)
+
             val sources = FileUtils.listFiles(submissionRoot, ".java")
             IntStream.range(0, config.copies)
                 .parallel()
                 .forEach { i ->
+                    println(i)
+
                     val submission = Manifests.buildForSubmission(submissionRoot, i)
 
                     // Injection
